@@ -1,6 +1,6 @@
 # vitest template
 
-This template should help get you started developing with Vue 3 in Vite.
+This template should help get you started developing with Vue 3 in Vite with viest unit test and playwright e2e test.
 
 ## Recommended IDE Setup
 
