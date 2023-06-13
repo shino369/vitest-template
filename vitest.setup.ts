@@ -10,17 +10,17 @@ const initServer = (
         res?: Record<string, any>
     }[]
 ) => {
-    const reqReceived = new Map()
+    // const reqReceived = new Map()
     const server = setupServer(
         ...endpoints.map((endpoint) =>
             rest[endpoint.method](endpoint.url, async (req, res, ctx) => {
-                const old = reqReceived.get(endpoint.url)
-                if (Boolean(old)) {
-                    old.push(new Date().getTime())
-                    reqReceived.set(endpoint.url, old)
-                } else {
-                    reqReceived.set(endpoint.url, [new Date().getTime()])
-                }
+                // const old = reqReceived.get(endpoint.url)
+                // if (Boolean(old)) {
+                //     old.push(new Date().getTime())
+                //     reqReceived.set(endpoint.url, old)
+                // } else {
+                //     reqReceived.set(endpoint.url, [new Date().getTime()])
+                // }
 
                 let response = endpoint.res || {}
                 if (endpoint.method === 'patch' && endpoint.url === '/api/updateMessage') {
@@ -34,34 +34,36 @@ const initServer = (
         )
     )
 
-    // polling promise
-    const requestReceived = (url: string) =>
-        new Promise((resolve, rej) => {
-            let count = 0
-            const interval = setInterval(() => {
-                count++
-                if (reqReceived.has(url)) {
-                    clearInterval(interval)
-                    const res = reqReceived.get(url)
-                    const oldest = res.shift()
-                    res.length > 0 ? reqReceived.set(url, res) : reqReceived.delete(url)
-                    resolve(oldest)
-                }
+    // // polling promise
+    // const requestReceived = (url: string) =>
+    //     new Promise((resolve, rej) => {
+    //         let count = 0
+    //         const interval = setInterval(() => {
+    //             count++
+    //             if (reqReceived.has(url)) {
+    //                 clearInterval(interval)
+    //                 const res = reqReceived.get(url)
+    //                 const oldest = res.shift()
+    //                 res.length > 0 ? reqReceived.set(url, res) : reqReceived.delete(url)
+    //                 resolve(oldest)
+    //             }
 
-                if (count > 10) {
-                    clearInterval(interval)
-                    rej('tomeout 500ms')
-                }
-            }, 50)
-        })
+    //             if (count > 10) {
+    //                 clearInterval(interval)
+    //                 rej('tomeout 500ms')
+    //             }
+    //         }, 50)
+    //     })
 
     return {
         server,
-        requestReceived
+        // requestReceived
     }
 }
 
-const { server, requestReceived } = initServer([
+const { server,
+    // requestReceived
+} = initServer([
     {
         method: 'get',
         url: '/api/getMessage',
@@ -83,4 +85,4 @@ beforeAll(() => {
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
-export const afterRequestReceived = requestReceived
+// export const afterRequestReceived = requestReceived

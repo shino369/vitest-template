@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import TestAPIView from '../TestAPIView.vue'
-import { afterRequestReceived } from '../../../vitest.setup'
 
 describe('ExampleView', () => {
     it('test message', async () => {
@@ -19,7 +18,7 @@ describe('ExampleView', () => {
         }
 
         // long polling
-        await afterRequestReceived('/api/updateMessage')
+        await flushPromises()
         expect(wrapper.vm.currentMsg).toBe('hello world')
     })
 })
